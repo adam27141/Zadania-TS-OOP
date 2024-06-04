@@ -16,7 +16,10 @@ const inputData: string[] = [
   "pigwa",
 ];
 
-const findPhraseInArray = (array: string[], phrase: string) => {
+const findPhraseInArray = (
+  array: string[],
+  phrase: string
+): (string | number)[][] => {
   let arrayOfFoundWords: (string | number)[][] = [];
   for (let i = 0; i < array.length; i++) {
     const element = array[i];

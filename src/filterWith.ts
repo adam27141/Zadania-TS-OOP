@@ -134,7 +134,7 @@ const data = [
   },
 ];
 
-function filterWith(arr: object[], phrase: string) {
+function filterWith(arr: object[], phrase: string): object[] {
   let result = arr.filter((element: object) => {
     let elementValues = Object.values(element);
     if (checkingValues(elementValues, phrase)) {

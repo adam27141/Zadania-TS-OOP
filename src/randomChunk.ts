@@ -1,6 +1,6 @@
 const alphabet: string[] = "abcdefghijklmnoprstuwxyz".split("");
 
-const aggregateIntoChunks = (array: string[]) => {
+const aggregateIntoChunks = (array: string[]): string[][] => {
   let chunks: string[][] = [];
   let arrayOfElements: string[] = [];
 
