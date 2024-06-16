@@ -45,6 +45,60 @@ class CartItem {
 }
 
 class Cart {
+  uuid: string;
+  listOfItems: CartItem[];
+  discount: number;
+  priceOfCart: any;
+  priceOfCartAfterDiscount: number;
+
+  constructor(discount: number) {
+    this.uuid = uuidv4();
+    this.listOfItems = [];
+    this.discount = discount;
+    this.priceOfCart = 0;
+    this.priceOfCartAfterDiscount = 0;
+  }
+
+  addItemToCart(cartItem: CartItem) {
+    this.listOfItems.push(cartItem);
+    this.calculatePriceOfCart(cartItem);
+    this.calculatePriceOfCartAfterDiscount();
+  }
+
+  removeItemFromCart(cartItem: CartItem) {
+    this.listOfItems.forEach((element, index) => {
+      if (element.uuid === cartItem.uuid) {
+        this.listOfItems.splice(index, 1);
+      }
+    });
+    this.calculatePriceOfCart(cartItem);
+    this.calculatePriceOfCartAfterDiscount();
+  }
+
+  calculatePriceOfCart(cartItem: CartItem) {
+    let totalPrice = 0;
+    for (let item of this.listOfItems) {
+      totalPrice += item.price;
+    }
+    this.priceOfCart = totalPrice;
+  }
+
+  calculatePriceOfCartAfterDiscount() {
+    let priceAfterDiscount = this.priceOfCart * (this.discount / 100);
+    priceAfterDiscount = this.priceOfCart - priceAfterDiscount;
+    this.priceOfCartAfterDiscount = priceAfterDiscount;
+  }
+
+  changeQuantityOfItem(item: CartItem, quantity: number) {
+    if (quantity === 0) {
+      this.removeItemFromCart(item);
+    } else {
+      for (let i = 0; i < quantity - 1; i++) {
+        this.addItemToCart(item);
+      }
+    }
+  }
+
   // Ma mieć: uuid, listę wybranych przedmiotów, rabat % na koszyk, kod rabatowy
   // Ma umożliwiać:
   // - dodawanie/usuwanie przedmiotów do/z koszyka
