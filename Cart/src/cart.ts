@@ -4,6 +4,7 @@ class CartItem {
   name: string;
   category: string;
   price: number;
+  priceAfterDiscount: number;
   discount: number;
   uuid: string;
 
@@ -11,8 +12,30 @@ class CartItem {
     this.name = name;
     this.category = category;
     this.price = price;
+    this.priceAfterDiscount = this.discountCalculation(discount);
     this.discount = discount;
     this.uuid = uuidv4();
+  }
+
+  discountCalculation(discount: number): number {
+    let priceAfterDiscount;
+    priceAfterDiscount = this.price * (discount / 100);
+    priceAfterDiscount = this.price - priceAfterDiscount;
+    return priceAfterDiscount;
+  }
+
+  changeNameOfItem(newName: string) {
+    this.name = newName;
+  }
+
+  changePriceOfItem(newPrice: number) {
+    this.price = newPrice;
+    this.priceAfterDiscount = this.discountCalculation(this.discount);
+  }
+
+  changeDiscountOfItem(newDiscount: number) {
+    this.discount = newDiscount;
+    this.priceAfterDiscount = this.discountCalculation(newDiscount);
   }
   // Ma miec: Nazwę, Kategorię, Cenę, Rabat % na przedmiot, uuid
   // Ma umożliwiać:
