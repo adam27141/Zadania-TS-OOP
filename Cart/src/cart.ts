@@ -50,6 +50,7 @@ class Cart {
   discount: number;
   priceOfCart: any;
   priceOfCartAfterDiscount: number;
+  view: View;
 
   constructor(discount: number) {
     this.uuid = uuidv4();
@@ -57,6 +58,7 @@ class Cart {
     this.discount = discount;
     this.priceOfCart = 0;
     this.priceOfCartAfterDiscount = 0;
+    this.view = view;
   }
 
   addItemToCart(cartItem: CartItem) {
@@ -93,15 +95,76 @@ class Cart {
     if (quantity === 0) {
       this.removeItemFromCart(item);
     } else {
-      for (let i = 0; i < quantity - 1; i++) {
+      this.removeItemFromCart(item);
+      for (let i = 0; i < quantity; i++) {
         this.addItemToCart(item);
       }
     }
   }
 
+  quantityOfItem(item: CartItem): number {
+    let quantity = 0;
+    this.listOfItems.forEach((element) => {
+      if (element.name === item.name && element.price === item.price) {
+        quantity += 1;
+      }
+    });
+    return quantity;
+  }
+
+  displayCart() {
+    this.view.cartView(this);
+  }
   // Ma mieć: uuid, listę wybranych przedmiotów, rabat % na koszyk, kod rabatowy
   // Ma umożliwiać:
   // - dodawanie/usuwanie przedmiotów do/z koszyka
   // - zmianę ilości produktu w koszyku
   // - podliczać wartość koszyka uwzględniajac rabaty
 }
+
+class View {
+  constructor() {}
+
+  cartView(cart: Cart) {
+    console.log(`Rabat na koszyk: ${cart.discount}%`);
+    console.log("Przedmioty w koszyku:");
+    cart.listOfItems.find((element) => {
+      console.log(
+        `Nazwa: ${element.name} | Kategoria: ${
+          element.category
+        } | Cena po rabacie: ${
+          element.priceAfterDiscount
+        }$ | Ilość: ${cart.quantityOfItem(element)}`
+      );
+    });
+    console.log(`Cena Koszyka po rabacie: ${cart.priceOfCartAfterDiscount}$`);
+  }
+}
+
+class Controller {
+  constructor() {}
+
+  main() {
+    let Cart1 = new Cart(10);
+
+    let Marchew = new CartItem("Marchew", "Warzywa", 50, 10);
+    let Kapusta = new CartItem("Kapusta", "Warzywa", 50, 10);
+    let Rzodkiewka = new CartItem("Rzodkiewka", "Warzywa", 100, 10);
+    let Rower = new CartItem("Rower", "Sport", 250, 10);
+
+    Cart1.addItemToCart(Marchew);
+    Cart1.addItemToCart(Kapusta);
+    Cart1.addItemToCart(Rzodkiewka);
+    Cart1.addItemToCart(Rower);
+
+    Cart1.changeQuantityOfItem(Marchew, 5);
+
+    Cart1.displayCart();
+    console.log(Cart1);
+  }
+}
+
+let controller = new Controller();
+let view = new View();
+
+controller.main();
