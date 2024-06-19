@@ -112,8 +112,12 @@ class Cart {
     return quantity;
   }
 
-  displayCart() {
-    this.view.cartView(this);
+  displayCartConsoleLog() {
+    console.log(view.cartView(view.getCartViewData(this)));
+  }
+
+  displayCartHTML() {
+    document.body.innerHTML = view.cartView(view.getCartViewData(this));
   }
   // Ma mieć: uuid, listę wybranych przedmiotów, rabat % na koszyk, kod rabatowy
   // Ma umożliwiać:
@@ -125,19 +129,33 @@ class Cart {
 class View {
   constructor() {}
 
-  cartView(cart: Cart) {
-    console.log(`Rabat na koszyk: ${cart.discount}%`);
-    console.log("Przedmioty w koszyku:");
-    cart.listOfItems.find((element) => {
-      console.log(
-        `Nazwa: ${element.name} | Kategoria: ${
-          element.category
-        } | Cena po rabacie: ${
-          element.priceAfterDiscount
-        }$ | Ilość: ${cart.quantityOfItem(element)}`
-      );
-    });
-    console.log(`Cena Koszyka po rabacie: ${cart.priceOfCartAfterDiscount}$`);
+  getCartViewData(cart: Cart) {
+    return {
+      discount: cart.discount,
+      listOfItems: cart.listOfItems.map((element) => {
+        return {
+          name: element.name,
+          category: element.category,
+          priceAfterDiscount: element.priceAfterDiscount,
+          quantitiOfItem: cart.quantityOfItem(element),
+        };
+      }),
+      priceOfCartAfterDiscount: cart.priceOfCartAfterDiscount,
+    };
+  }
+
+  cartView(cartViewData: any): string {
+    return (
+      `Rabat na koszyk: ${cartViewData.discount}<br>` +
+      `Przedmioty w koszyku:<br>` +
+      cartViewData.listOfItems
+        .map(
+          (item: any) =>
+            `Nazwa: ${item.name}, Kategoria: ${item.category}, Cena po rabacie: ${item.priceAfterDiscount}, Ilość: ${item.quantityOfItem}<br>`
+        )
+        .join("") +
+      `Cena koszyka po rabacie: ${cartViewData.priceOfCartAfterDiscount}`
+    );
   }
 }
 
@@ -159,7 +177,8 @@ class Controller {
 
     Cart1.changeQuantityOfItem(Marchew, 5);
 
-    Cart1.displayCart();
+    Cart1.displayCartConsoleLog();
+    Cart1.displayCartHTML();
     console.log(Cart1);
   }
 }
